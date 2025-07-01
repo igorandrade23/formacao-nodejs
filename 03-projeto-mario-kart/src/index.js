@@ -118,18 +118,40 @@ async function playRaceEngine(character1, character2) {
         character2.PODER
       );
 
+      function getPenalty() {
+        return Math.random() < 0.5
+          ? { type: "casco", value: 1 }
+          : { type: "bomba", value: 2 };
+      }
+
+      function hasTurbo() {
+        return Math.random() < 0.5;
+      }
+
       if (powerResult1 > powerResult2 && character2.PONTOS > 0) {
+        const penalty = getPenalty();
+        const pointsLost = Math.min(penalty.value, character2.PONTOS);
+        character2.PONTOS -= pointsLost;
         console.log(
-          `${character1.NOME} venceu o confronto! ${character2.NOME} perdeu 1 ponto 🐢`
+          `${character1.NOME} venceu o confronto! ${character2.NOME} perdeu ${pointsLost} ponto(s) (${penalty.type})`
         );
-        character2.PONTOS--;
+        if (hasTurbo()) {
+          character1.PONTOS++;
+          console.log(`${character1.NOME} ganhou um TURBO! (+1 ponto) 🚀`);
+        }
       }
 
       if (powerResult2 > powerResult1 && character1.PONTOS > 0) {
+        const penalty = getPenalty();
+        const pointsLost = Math.min(penalty.value, character1.PONTOS);
+        character1.PONTOS -= pointsLost;
         console.log(
-          `${character2.NOME} venceu o confronto! ${character1.NOME} perdeu 1 ponto 🐢`
+          `${character2.NOME} venceu o confronto! ${character1.NOME} perdeu ${pointsLost} ponto(s) (${penalty.type})`
         );
-        character1.PONTOS--;
+        if (hasTurbo()) {
+          character2.PONTOS++;
+          console.log(`${character2.NOME} ganhou um TURBO! (+1 ponto) 🚀`);
+        }
       }
 
       console.log(
